@@ -1,0 +1,86 @@
+---
+# see inac.cea/L_Sim/V_Sim for installation instructions
+- name: Install v_sim dependencies
+  become: true
+  become_user: "{{ root_user }}"
+  apt:
+    name:
+      - gfortran
+      - libnetcdf-dev
+      - libglu1-mesa-dev
+      - libopenbabel-dev
+      - gtk-doc-tools
+      - libgtk-3-dev
+      - intltool
+      - gobject-introspection
+      - python-gobject-2-dev
+      - libyaml-dev
+      - libgirepository1.0-dev
+
+- name: Get v_sim source (from gitlab as the latest release has an issue)
+#  get_url:
+#    url: "{{ v_sim_url }}"
+#    dest: "{{ v_sim_code_folder }}/{{ v_sim_src_archive }}"
+  git:
+    repo: "{{ v_sim_git_url }}"
+    dest: "{{ v_sim_topdir }}"
+    force: true
+  register: v_sim_download
+
+#- name: Extract v_sim source
+#  unarchive:
+#    src: "{{ v_sim_download.dest }}"
+#    dest: "{{ v_sim_code_folder }}"
+#    remote_src: True
+
+- name: Create build dir
+  file:
+    path: "{{ v_sim_topdir }}/build"
+    state: directory
+
+- name: Generate configure
+  shell: "./autogen.sh"
+  args:
+    chdir: "{{ v_sim_topdir }}"
+    creates: "{{ v_sim_topdir }}/configure"
+
+- name: Configure
+  shell: "../configure --with-abinit --with-archives --with-openbabel --with-cube --without-strict-cflags --prefix={{ v_sim_install_folder }}"
+  args:
+    chdir: "{{ v_sim_topdir }}/build"
+    creates: "{{ v_sim_topdir }}/build/Makefile"
+
+- name: Make v_sim executables
+  shell: "make; make install"
+  args:
+    chdir: "{{ v_sim_topdir }}/build"
+    creates: "{{ v_sim_install_folder }}/bin/v_sim"
+  register: v_sim_make
+
+- name: "Put a line in ~/.profile to add v_sim to the path"
+  lineinfile:
+    path: "${HOME}/.profile"
+    line: "export PATH=${PATH}:{{ v_sim_install_folder }}/bin"
+
+- name: "Put a line in ~/.profile to add v_sim to the ld_library_path"
+  lineinfile:
+    path: "${HOME}/.profile"
+    line: "export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:{{ v_sim_install_folder }}/lib"
+
+- include_role:
+    name: release_notes
+  vars:
+    section: "v_sim"
+    option: "version"
+    value: "{{ v_sim_version }}"
+  when: release_notes is defined and release_notes
+
+- include_role:
+    name: release_notes
+  vars:
+    section: "v_sim"
+    option: "usage"
+    value: >-
+      v_sim is compiled and installed in {{ v_sim_install_folder }} 
+      simply run 'v_sim-dev'
+  when: release_notes is defined and release_notes

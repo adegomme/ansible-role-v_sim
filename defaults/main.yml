@@ -1,0 +1,16 @@
+---
+v_sim_version: "3.7"
+v_sim_minor_version: "99-1"
+v_sim_src: v_sim-dev-{{ v_sim_version }}.{{ v_sim_minor_version }}
+v_sim_src_archive: "{{ v_sim_src }}.tar.gz"
+v_sim_code_folder: "${HOME}"
+v_sim_install_folder: "{{ v_sim_code_folder }}/v_sim_install"
+v_sim_url: "http://inac.cea.fr/L_Sim/V_Sim/download/{{ v_sim_src_archive }}"
+v_sim_git_url: "https://gitlab.com/l_sim/v_sim.git"
+v_sim_topdir: "{{ v_sim_code_folder }}/v_sim"
+v_sim_executables:
+- name: v_sim
+  folder: "{{ v_sim_install_folder }}/bin"
+  plugin: v_sim.v_sim
+
+root_user: root
