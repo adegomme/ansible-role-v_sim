@@ -7,10 +7,11 @@ v_sim_code_folder: "${HOME}"
 v_sim_install_folder: "{{ v_sim_code_folder }}/v_sim_install"
 v_sim_url: "http://inac.cea.fr/L_Sim/V_Sim/download/{{ v_sim_src_archive }}"
 v_sim_git_url: "https://gitlab.com/l_sim/v_sim.git"
+v_sim_git_version: "c4fff114c296d369a16438280e97224435c7c094"
 v_sim_topdir: "{{ v_sim_code_folder }}/v_sim"
 v_sim_executables:
-- name: v_sim
-  folder: "{{ v_sim_install_folder }}/bin"
-  plugin: v_sim.v_sim
+  - name: v_sim
+    folder: "{{ v_sim_install_folder }}/bin"
+    plugin: v_sim.v_sim
 
 root_user: root
