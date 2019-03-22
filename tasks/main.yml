@@ -61,7 +61,7 @@
 - name: "Put a line in ~/.profile to add v_sim to the path"
   lineinfile:
     path: "${HOME}/.profile"
-    line: "export PATH=${PATH}:{{ v_sim_install_folder }}/bin"
+    line: "export PATH=${PATH}:{{ v_sim_install_folder }}/bin"
 
 - name: "Put a line in ~/.profile to add v_sim to the ld_library_path"
   lineinfile:
