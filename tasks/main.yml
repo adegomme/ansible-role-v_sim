@@ -17,22 +17,23 @@
       - libyaml-dev
       - libgirepository1.0-dev
 
-- name: Get v_sim source (from gitlab as the latest release has an issue)
-  # get_url:
-  #   url: "{{ v_sim_url }}"
-  #   dest: "{{ v_sim_code_folder }}/{{ v_sim_src_archive }}"
-  git:
-    repo: "{{ v_sim_git_url }}"
-    dest: "{{ v_sim_topdir }}"
-    version: "{{ v_sim_git_version }}"
-    force: true
-  register: v_sim_download
+# get_url:
+#   url: "{{ v_sim_url }}"
+#   dest: "{{ v_sim_code_folder }}/{{ v_sim_src_archive }}"
 
 # - name: Extract v_sim source
 #   unarchive:
 #     src: "{{ v_sim_download.dest }}"
 #     dest: "{{ v_sim_code_folder }}"
 #     remote_src: True
+
+- name: Get v_sim source (from gitlab as the latest release has an issue)
+  git:
+    repo: "{{ v_sim_git_url }}"
+    dest: "{{ v_sim_topdir }}"
+    version: "{{ v_sim_git_version }}"
+    force: true
+  register: v_sim_download
 
 - name: Create build dir
   file:
@@ -61,7 +62,7 @@
 - name: "Put a line in ~/.profile to add v_sim to the path"
   lineinfile:
     path: "${HOME}/.profile"
-    line: "export PATH=${PATH}:{{ v_sim_install_folder }}/bin"
+    line: "export PATH=${PATH}:{{ v_sim_install_folder }}/bin"
 
 - name: "Put a line in ~/.profile to add v_sim to the ld_library_path"
   lineinfile:
