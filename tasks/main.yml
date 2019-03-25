@@ -32,7 +32,6 @@
     repo: "{{ v_sim_git_url }}"
     dest: "{{ v_sim_topdir }}"
     version: "{{ v_sim_git_version }}"
-    force: true
   register: v_sim_download
 
 - name: Create build dir
