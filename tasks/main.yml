@@ -55,7 +55,7 @@
   shell: "make; make install"
   args:
     chdir: "{{ v_sim_topdir }}/build"
-    creates: "{{ v_sim_install_folder }}/bin/v_sim"
+    creates: "{{ v_sim_install_folder }}/bin/v_sim-dev"
   register: v_sim_make
 
 - name: "Put a line in ~/.profile to add v_sim to the path"
